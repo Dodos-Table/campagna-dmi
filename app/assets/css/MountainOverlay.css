@@ -1,0 +1,16 @@
+
+.overlay {
+  @apply absolute flex w-full;
+}
+.cavern {
+  @apply flex w-[29vw] h-[23vh];
+
+  background: #4f3404;
+  background: -webkit-linear-gradient(157deg,rgba(79, 52, 4, 1) 25%, rgba(115, 69, 0, 1) 96%);
+  background: -moz-linear-gradient(157deg,rgba(79, 52, 4, 1) 25%, rgba(115, 69, 0, 1) 96%);
+  background: linear-gradient(157deg,rgba(79, 52, 4, 1) 25%, rgba(115, 69, 0, 1) 96%);
+  clip-path: polygon(0% 0%, 0% 100%, 9% 96%, 18% 81%, 28% 88%, 37% 67%, 48% 80%, 63% 50%, 74% 61%, 83% 16%, 92% 32%, 100% 0);
+}
+.mirror {
+  transform: scale(-1,1);
+}

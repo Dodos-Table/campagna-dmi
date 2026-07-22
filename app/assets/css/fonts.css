@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'Mischievous';
+    src: url('/fonts/Mischievous.ttf');
+}
+.text-dungeon {
+    font-family: 'Mischievous', sans-serif !important;
+}
+@font-face {
+    font-family: 'PointinkZona';
+    src: url('/fonts/PointinkZona21Ice-Regular.ttf');
+}
+.text-monster {
+    font-family: 'PointinkZona', sans-serif !important;
+}
+@font-face {
+    font-family: 'Kingthings';
+    src: url('/fonts/Kingthings Foundation.ttf');
+}
+.text-isekai {
+    font-family: 'Kingthings', sans-serif !important;
+}
