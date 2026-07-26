@@ -2,6 +2,7 @@ import MountainOverlay from "~/components/MountainOverlay";
 import type { Route } from "./+types/index";
 import SiteTitle from "~/components/SiteTitle";
 import { Link } from "react-router";
+import DmiBtn from "~/components/DmiBtn";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -16,7 +17,10 @@ export default function Home() {
       <MountainOverlay/>
       <div className="container">
         <SiteTitle/>
-        <Link to="scheda">ciao mondo</Link>
+        <div className="text-center flex flex-col gap-3">
+          <DmiBtn link="scheda">Scheda Personaggio</DmiBtn>
+          <DmiBtn link="skill">Skill</DmiBtn>
+        </div>
       </div>
       
     </>

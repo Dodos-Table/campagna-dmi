@@ -1,6 +1,7 @@
+@import "tailwindcss";
 
 .overlay {
-  @apply absolute flex w-full;
+  @apply absolute hidden md:flex w-full;
 }
 .cavern {
   @apply flex w-[29vw] h-[23vh];

@@ -1,0 +1,226 @@
+@import "@xyflow/react/dist/style.css";
+
+/* Palette per linea evolutiva: `--linea` colora bordo del nodo e tratto dell'arco. */
+.skill-node--acido,
+.skill-edge--acido {
+    --linea: #7fbf5a;
+}
+.skill-node--supporto,
+.skill-edge--supporto {
+    --linea: var(--color-accent);
+}
+.skill-node--metallo,
+.skill-edge--metallo {
+    --linea: #b8c4d9;
+}
+.skill-node--reale,
+.skill-edge--reale {
+    --linea: #b06ac9;
+}
+.skill-node--neutro,
+.skill-edge--neutro {
+    --linea: var(--color-text);
+}
+
+/* ---------- contenitore scrollabile ---------- */
+
+.skill-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) var(--color-secondary);
+}
+
+.skill-scroll::-webkit-scrollbar {
+    height: 0.6rem;
+}
+.skill-scroll::-webkit-scrollbar-track {
+    background: var(--color-secondary);
+    border-radius: 0.4rem;
+}
+.skill-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 0.4rem;
+}
+
+.skill-canvas .react-flow {
+    background: transparent;
+}
+
+.skill-canvas .react-flow__attribution {
+    background: transparent;
+    font-size: 0.6rem;
+}
+.skill-canvas .react-flow__attribution a {
+    color: var(--color-text);
+    opacity: 0.5;
+}
+
+/* I punti di aggancio non sono interattivi: servono solo ad ancorare gli archi. */
+.skill-canvas .react-flow__handle {
+    opacity: 0;
+    pointer-events: none;
+    border: none;
+}
+
+/* ---------- nodi ---------- */
+
+.skill-node {
+    --linea: var(--color-text);
+
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.7rem;
+    border: 2px solid var(--linea);
+    border-radius: 0.4rem;
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    text-shadow: 0 0 2px black;
+    box-shadow: 0 0 0.5rem color-mix(in oklch, var(--linea) 25%, transparent);
+    transition: 200ms;
+}
+
+.skill-node:hover {
+    background-color: lch(from var(--color-secondary) calc(l - 7) c h);
+    border-color: lch(from var(--linea) calc(l + 8) c h);
+    box-shadow: 0 0 0.9rem color-mix(in oklch, var(--linea) 45%, transparent);
+    transition: 200ms;
+}
+
+.skill-node__nome {
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+/* radice: la lastra da cui parte tutto, icona sopra il nome */
+.skill-node--radice {
+    flex-direction: column;
+    gap: 0.4rem;
+    border-width: 3px;
+    border-radius: 0.6rem;
+    background-color: lch(from var(--color-secondary) calc(l - 10) c h);
+    /* cornice doppia, come la targa del nodo iniziale nel riferimento */
+    box-shadow:
+        inset 0 0 0 2px color-mix(in oklch, var(--linea) 35%, transparent),
+        0 0 0.8rem color-mix(in oklch, var(--linea) 30%, transparent);
+    font-family: "Kingthings", sans-serif;
+    font-size: 1.35rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ramo: intestazione di una linea evolutiva */
+.skill-node--ramo {
+    flex-direction: column;
+    gap: 0.35rem;
+    background-image: linear-gradient(
+        160deg,
+        color-mix(in oklch, var(--linea) 32%, var(--color-secondary)),
+        var(--color-secondary)
+    );
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* foglia: singola evoluzione, icona a sinistra del testo */
+.skill-node--foglia {
+    justify-content: flex-start;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+/* boss: evoluzione finale di una linea, oro invece del colore della linea */
+.skill-node--boss {
+    --linea: #e0b64a;
+
+    padding-right: 1.5rem; /* spazio per la corona */
+    background-color: lch(from var(--color-secondary) calc(l - 6) c h);
+    font-weight: 700;
+}
+
+.skill-node__corona {
+    position: absolute;
+    top: 0.15rem;
+    right: 0.3rem;
+    color: var(--linea);
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+/* ---------- icone ---------- */
+
+.skill-icon {
+    flex: 0 0 auto;
+    width: 2.2rem;
+    height: 2.2rem;
+    object-fit: contain;
+}
+
+.skill-node--radice .skill-icon,
+.skill-node--ramo .skill-icon {
+    width: 2.8rem;
+    height: 2.8rem;
+}
+
+.skill-icon--fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid color-mix(in oklch, var(--linea) 60%, transparent);
+    border-radius: 50%;
+    background: color-mix(in oklch, var(--linea) 22%, transparent);
+    color: var(--linea);
+    font-family: "Kingthings", sans-serif;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* ---------- archi ---------- */
+
+.skill-edge .react-flow__edge-path {
+    stroke: color-mix(in oklch, var(--linea) 75%, transparent);
+    stroke-width: 2;
+}
+
+/* ---------- selettore creatura ---------- */
+
+.skill-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.skill-tab {
+    padding: 0.4rem 1rem;
+    border: 2px solid var(--color-accent);
+    border-radius: 0.4rem;
+    background-color: var(--color-secondary);
+    color: var(--color-accent);
+    text-shadow: 0 0 2px black;
+    transition: 200ms;
+}
+
+.skill-tab:hover {
+    background-color: lch(from var(--color-secondary) calc(l - 7) c h);
+    color: lch(from var(--color-accent) calc(l - 14) c h);
+    transition: 200ms;
+}
+
+.skill-tab--attiva {
+    background-color: var(--color-accent);
+    color: var(--color-secondary);
+    font-weight: 700;
+}
