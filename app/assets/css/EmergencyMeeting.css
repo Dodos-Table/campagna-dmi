@@ -1,0 +1,146 @@
+
+
+/* Altezza del cilindro: alza/abbassa questo valore per un pulsante
+   più alto o più basso. --ry è il semiasse verticale dell'ellisse,
+   cioè quanto "prospettiva" ha la faccia superiore. */
+@property --h {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 110px;
+}
+
+.sceneWrapper {
+    
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 72px;
+    
+}
+
+.scene {
+    --w: 225px;   /* diametro del pulsante */
+    --ry: 56px;   /* schiacciamento prospettico della faccia superiore */
+    --h: 115px;   /* altezza del fianco */
+
+    transform: scale(0.4);
+    position: relative;
+    width: 15vw;
+    /*height: 440px;*/
+}
+
+/* Base trapezoidale in prospettiva */
+.platform {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+
+    width: 420px;
+    height: 260px;
+
+    transform: translate(-50%, -50%) perspective(900px) rotateX(60deg);
+
+    background: #b9bec5;
+    border: 8px solid #4e6580;
+
+    /*clip-path: polygon(
+        12% 0,
+        88% 0,
+        100% 100%,
+        0 100%
+    );*/
+
+    /*box-shadow: 0 25px 40px rgba(0,0,0,.35);*/
+}
+
+/* Pulsante: ancorato in basso, così crescendo in altezza
+   sale verso l'alto invece di sprofondare nella base. */
+.button {
+    position: absolute;
+    left: 50%;
+    bottom: calc(50% - 26px);
+
+    width: var(--w);
+    height: calc(var(--h) + var(--ry) * 2);
+
+    transform: translateX(-50%);
+
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    transition: --h .12s ease;
+}
+
+/* Ombra proiettata sulla base */
+.button::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--ry) * -0.35);
+
+    width: calc(var(--w) * 1.05);
+    height: calc(var(--ry) * 1.5);
+
+    transform: translateX(-50%);
+
+    background: rgba(0,0,0,.4);
+    border-radius: 50%;
+    filter: blur(14px);
+    z-index: -1;
+}
+
+/* Fianco del cilindro: rettangolo con il bordo inferiore
+   arrotondato a mezza ellisse (stesso raggio della faccia sopra). */
+.side {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: calc(var(--h) + var(--ry));
+
+    border: 5px solid #111;
+    border-top: none;
+    border-radius: 0 0 50% 50% / 0 0 var(--ry) var(--ry);
+
+    background: linear-gradient( to right, 
+    #c31010, 
+    #b32a2a 18%, 
+    #a82525 42%, 
+    #b32a2a 72%, 
+    #c31010 );
+
+    /*box-shadow: inset 0 -25px 30px rgba(0,0,0,.35);*/
+}
+
+/* Faccia superiore: ellisse completa, contornata su tutto il giro */
+.top {
+    position: absolute;
+    left: 0;
+    bottom: var(--h);
+
+    width: 100%;
+    height: calc(var(--ry) * 2);
+
+    border: 5px solid #111;
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            ellipse 70% 70% at 45% 30%,
+            #e84444,
+            #c22626 60%,
+            #a51f1f
+        );
+
+    /*box-shadow:
+        inset 0 12px 18px rgba(255,255,255,.18),
+        inset 0 -14px 18px rgba(0,0,0,.2);*/
+}
+
+/* Pressione: il fianco si accorcia, la faccia superiore scende */
+.button:active {
+    --h: 26px;
+}
