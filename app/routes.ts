@@ -5,8 +5,8 @@ export default [
         index("routes/index.tsx"),
         /*route("skill", "routes/__layouts/skill-layout.tsx", [
             index("routes/skill/index.tsx"),
-            route(":creatura", "routes/skill/creatura.tsx"),*/
-        ]),
+            route(":creatura", "routes/skill/creatura.tsx"),
+        ]),*/
         route("npc", "routes/__layouts/simple-layout.tsx", [
             index("routes/npc/index.tsx")
         ])
