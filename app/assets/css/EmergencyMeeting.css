@@ -14,7 +14,7 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    height: 72px;
+    height: 105px;
     
 }
 
@@ -143,4 +143,29 @@
 /* Pressione: il fianco si accorcia, la faccia superiore scende */
 .button:active {
     --h: 26px;
+}
+
+
+.meetingtext {
+    stroke-width: 0.15;
+    stroke: #fff;
+    fill:yellow;
+    opacity: 0;
+}
+
+.meetinganim {
+    animation: textStroke 500ms infinite, textshow 3s;
+}
+
+@keyframes textshow {
+    0% {opacity: 0;}
+    33% {opacity: 1;}
+    80% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+@keyframes textStroke {
+    0% {stroke:magenta;}
+    50% {stroke:white;}
+    100%{stroke:magenta}
 }

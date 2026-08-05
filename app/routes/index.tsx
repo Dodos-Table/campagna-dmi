@@ -27,6 +27,7 @@ export default function Home() {
         <div className="text-center flex flex-col gap-3">
           <DmiBtn link="http://127.0.0.1:32177/" newPage={true}>Scheda Personaggio</DmiBtn>
           <DmiBtn link="skill">Skill</DmiBtn>
+          <DmiBtn link="npc">NPCs</DmiBtn>
         </div>
       </div>
       <IntegrazioneApp dmibridge={dmiBridge}/>
