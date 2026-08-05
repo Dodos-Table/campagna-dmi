@@ -20,10 +20,16 @@ export default function SkillIcon(prop: Readonly<SkillIconProp>) {
         );
     }
 
+    // I path in `skill-tree.json` sono assoluti (`/img/...`) ma il sito vive sotto un base path:
+    // Vite non può riscrivere una stringa costruita a runtime, quindi lo prefissiamo qui.
+    const src = prop.src.startsWith("/")
+        ? import.meta.env.BASE_URL + prop.src.slice(1)
+        : prop.src;
+
     return (
         <img
             className="skill-icon"
-            src={prop.src}
+            src={src}
             alt=""
             aria-hidden="true"
             draggable={false}
