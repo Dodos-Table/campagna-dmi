@@ -1,0 +1,127 @@
+/* ---------- indice ---------- */
+
+.npc-gruppo {
+    margin-bottom: 2rem;
+}
+
+.npc-gruppo__titolo {
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid color-mix(in oklch, var(--color-accent) 45%, transparent);
+    color: var(--color-accent);
+    font-size: 1.4rem;
+    text-shadow: 0 0 2px black;
+}
+
+.npc-griglia {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.8rem;
+}
+
+.npc-card {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.8rem;
+    border: 2px solid var(--color-accent);
+    border-radius: 0.4rem;
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    text-shadow: 0 0 2px black;
+    transition: 200ms;
+}
+
+.npc-card:hover {
+    border-color: lch(from var(--color-accent) calc(l - 7) c h);
+    background-color: lch(from var(--color-secondary) calc(l - 7) c h);
+    transition: 200ms;
+}
+
+.npc-card__testo {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.npc-card__nome {
+    color: var(--color-accent);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.npc-card__epiteto {
+    font-size: 0.85rem;
+    line-height: 1.2;
+    opacity: 0.8;
+    overflow-wrap: anywhere;
+}
+
+/* ---------- ritratti ---------- */
+
+.npc-ritratto {
+    flex: 0 0 auto;
+    border: 2px solid var(--color-accent);
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.npc-ritratto--card {
+    width: 3.2rem;
+    height: 3.2rem;
+}
+
+.npc-ritratto--scheda {
+    width: 8rem;
+    height: 8rem;
+}
+
+.npc-ritratto--fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in oklch, var(--color-accent) 22%, transparent);
+    color: var(--color-accent);
+    font-family: "Kingthings", sans-serif;
+    line-height: 1;
+}
+
+.npc-ritratto--card.npc-ritratto--fallback {
+    font-size: 1.6rem;
+}
+
+.npc-ritratto--scheda.npc-ritratto--fallback {
+    font-size: 4rem;
+}
+
+/* ---------- scheda del singolo NPC ---------- */
+
+.npc-scheda__testata {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
+}
+
+/* `.title` è flex-column per la home: qui serve solo come font e dimensione. */
+.npc-scheda__testata .title {
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.npc-scheda__epiteto {
+    color: var(--color-accent);
+    font-size: 1.1rem;
+}
+
+.npc-scheda__gruppo {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+.npc-scheda__descrizione {
+    max-width: 65ch;
+    line-height: 1.6;
+    white-space: pre-line;
+}

@@ -8,7 +8,8 @@ export default [
             route(":creatura", "routes/skill/creatura.tsx"),
         ]),
         route("npc", "routes/__layouts/simple-layout.tsx", [
-            index("routes/npc/index.tsx")
+            index("routes/npc/index.tsx"),
+            route(":id", "routes/npc/npc.tsx"),
         ])
     ]),
 ] satisfies RouteConfig;
