@@ -9,6 +9,50 @@ export interface DmiProfile {
     currentForm: string;
 }
 
+/** Bonus alle statistiche concessi da un'evoluzione. Le chiavi assenti valgono 0. */
+export interface DmiBonuses {
+    HP?: number;
+    MP?: number;
+    ATK?: number;
+    DEF?: number;
+    AGL?: number;
+    INTMEN?: number;
+}
+
+/** Un passo di `character.evolutionHistory`: l'evoluzione scelta e quando. */
+export interface DmiEvolutionStep {
+    id?: string;
+    treeId?: string;
+    lineId?: string;
+    nodeName?: string;
+    label?: string;
+    /** Come è stata ottenuta l'evoluzione, es. "Impronta Lesser". */
+    source?: string;
+    bonuses?: DmiBonuses;
+    /** Data ISO. */
+    createdAt?: string;
+}
+
+/**
+ * Anagrafica della scheda. I campi sono opzionali perché il doc non garantisce
+ * lo schema interno: la forma qui descritta è quella osservata negli export reali.
+ */
+export interface DmiIdentity {
+    monsterName?: string;
+    playerName?: string;
+    level?: number;
+    evolutionTree?: string;
+    evolutionLine?: string;
+    evolutionTier?: string;
+    evolutionStart?: string;
+    currentEvolution?: string;
+    nextEvolution?: string;
+    previousForm?: string;
+    species?: string;
+    family?: string;
+    [chiave: string]: unknown;
+}
+
 /**
  * Scheda attiva nel formato nativo dell'app.
  * Il doc non specifica il contenuto dei singoli blocchi: restano larghi
@@ -16,10 +60,10 @@ export interface DmiProfile {
  */
 export interface DmiCharacter {
     id: string;
-    identity: Record<string, unknown>;
+    identity: DmiIdentity;
     stats: Record<string, unknown>;
     resources: Record<string, unknown>;
-    evolutionHistory: unknown[];
+    evolutionHistory: DmiEvolutionStep[];
     skills: unknown[];
     statuses: unknown[];
     actions: Record<string, unknown>;

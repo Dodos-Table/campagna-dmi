@@ -1,0 +1,216 @@
+@import "@xyflow/react/dist/style.css";
+
+/* ---------- contenitore scrollabile ---------- */
+
+.evo-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) var(--color-secondary);
+}
+
+.evo-scroll::-webkit-scrollbar {
+    height: 0.6rem;
+}
+.evo-scroll::-webkit-scrollbar-track {
+    background: var(--color-secondary);
+    border-radius: 0.4rem;
+}
+.evo-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 0.4rem;
+}
+
+/* Percorsi corti: il canvas resta centrato. Se invece è più largo della pagina
+   i margini automatici valgono 0 e lo scroll parte regolarmente da sinistra. */
+.evo-canvas {
+    margin-inline: auto;
+}
+
+.evo-canvas .react-flow {
+    background: transparent;
+}
+
+.evo-canvas .react-flow__attribution {
+    background: transparent;
+    font-size: 0.6rem;
+}
+.evo-canvas .react-flow__attribution a {
+    color: var(--color-text);
+    opacity: 0.5;
+}
+
+/* I punti di aggancio non sono interattivi: servono solo ad ancorare gli archi. */
+.evo-canvas .react-flow__handle {
+    opacity: 0;
+    pointer-events: none;
+    border: none;
+}
+
+/* ---------- nodi ---------- */
+
+.evo-node {
+    /* `--linea` colora bordo, glow e archi: la ridefiniscono i modificatori qui sotto. */
+    --linea: var(--color-text);
+
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.7rem;
+    border: 2px solid var(--linea);
+    border-radius: 0.4rem;
+    /* L'altezza la decide `evoluzioniLayout`, stimandola dal contenuto: se la stima
+       dovesse restare corta il testo viene tagliato, mai riversato fuori dal riquadro. */
+    overflow: hidden;
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    text-align: center;
+    text-shadow: 0 0 2px black;
+    box-shadow: 0 0 0.5rem color-mix(in oklch, var(--linea) 25%, transparent);
+    transition: 200ms;
+}
+
+.evo-node:hover {
+    background-color: lch(from var(--color-secondary) calc(l - 7) c h);
+    border-color: lch(from var(--linea) calc(l + 8) c h);
+    box-shadow: 0 0 0.9rem color-mix(in oklch, var(--linea) 45%, transparent);
+    transition: 200ms;
+}
+
+.evo-node__testa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.evo-node__nome {
+    font-family: "Kingthings", sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+}
+
+.evo-node__sorgente {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    opacity: 0.75;
+    overflow-wrap: anywhere;
+}
+
+.evo-node__bonus {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.2rem 0.45rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.75rem;
+}
+
+.evo-node__bonus li {
+    padding: 0.05rem 0.35rem;
+    border: 1px solid color-mix(in oklch, var(--linea) 45%, transparent);
+    border-radius: 0.25rem;
+    background: color-mix(in oklch, var(--linea) 14%, transparent);
+    white-space: nowrap;
+}
+
+/* passo: evoluzione già ottenuta */
+.evo-node--passo {
+    --linea: var(--color-text);
+
+    background-color: lch(from var(--color-secondary) calc(l - 6) c h);
+}
+
+/* attuale: la forma con cui il personaggio sta giocando adesso */
+.evo-node--attuale {
+    --linea: var(--color-accent);
+
+    border-width: 3px;
+    box-shadow:
+        inset 0 0 0 2px color-mix(in oklch, var(--linea) 30%, transparent),
+        0 0 0.9rem color-mix(in oklch, var(--linea) 40%, transparent);
+}
+
+.evo-node__badge {
+    padding: 0.05rem 0.45rem;
+    border-radius: 0.6rem;
+    background: var(--color-accent);
+    color: var(--color-secondary);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-shadow: none;
+    text-transform: uppercase;
+}
+
+/* prossimo: evoluzione dichiarata ma non ancora ottenuta */
+.evo-node--prossimo {
+    --linea: var(--color-text);
+
+    border-style: dashed;
+    background-color: transparent;
+    box-shadow: none;
+    opacity: 0.65;
+}
+
+.evo-node--prossimo .evo-node__nome {
+    font-size: 1.05rem;
+}
+
+.evo-node__quando {
+    font-size: 0.7rem;
+    opacity: 0.55;
+}
+
+.evo-node__etichetta {
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    opacity: 0.8;
+    text-transform: uppercase;
+}
+
+/* ---------- icone ---------- */
+
+.evo-icon {
+    flex: 0 0 auto;
+    width: 2.2rem;
+    height: 2.2rem;
+    object-fit: contain;
+}
+
+.evo-icon--fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid color-mix(in oklch, var(--linea) 60%, transparent);
+    border-radius: 50%;
+    background: color-mix(in oklch, var(--linea) 22%, transparent);
+    color: var(--linea);
+    font-family: "Kingthings", sans-serif;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* ---------- archi ---------- */
+
+.evo-edge .react-flow__edge-path {
+    stroke: color-mix(in oklch, var(--color-text) 75%, transparent);
+    stroke-width: 2;
+}
+
+.evo-edge--futuro .react-flow__edge-path {
+    stroke: color-mix(in oklch, var(--color-text) 45%, transparent);
+    stroke-dasharray: 6 5;
+}

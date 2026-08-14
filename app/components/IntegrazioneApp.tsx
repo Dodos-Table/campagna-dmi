@@ -1,10 +1,10 @@
-import { useState } from "react"
 import { Tooltip } from "react-tooltip"
-import useDmiBridge, { type DmiBridge } from "~/lib/useDmiBridge"
+import FormTokenDmi from "~/components/FormTokenDmi"
+import type { DmiBridge } from "~/lib/useDmiBridge"
 import type { DmiExport } from "~/types/dmi"
 import "~/assets/css/IntegrazioneApp.css"
 
-/** Il nome vive in `character.identity`, la cui forma non è documentata: fallback sull'indice profili. */
+/** Il nome vive in `character.identity`, che può essere incompleta: fallback sull'indice profili. */
 function nomeMostro(dati: DmiExport): string {
     const identity = dati.character.identity
     if (typeof identity.monsterName === "string" && identity.monsterName) return identity.monsterName
@@ -26,46 +26,27 @@ function oraSync(syncedAt: string): string {
     return Number.isNaN(data.getTime()) ? syncedAt : data.toLocaleString("it-IT")
 }
 
-interface propDmiBridge {
+interface IntegrazioneAppProp {
+    /** Collegamento creato dalla pagina: il componente non ne apre uno proprio,
+     *  altrimenti la stessa pagina interrogherebbe il bridge due volte. */
     dmibridge: DmiBridge
 }
 
-export default function IntegrazioneApp(prop : propDmiBridge) {
+export default function IntegrazioneApp(prop: Readonly<IntegrazioneAppProp>) {
 
-    const { dati, stato, errore, token, setToken, ricarica } = useDmiBridge()
-    const [bozzaToken, setBozzaToken] = useState("")
+    const { dati, stato, errore, token, setToken, ricarica } = prop.dmibridge
 
     if (!token) {
         return (
-        <div className="statusIntegrazione"> 
-            <form
-                className="flex gap-3 items-center"
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    setToken(bozzaToken)
-                    setBozzaToken("")
-                }}
-            >
-                <div>
-                    <input
-                        type="password"
-                        value={bozzaToken}
-                        onChange={(e) => setBozzaToken(e.target.value)}
-                        placeholder="Token DMI"
-                        autoComplete="off"
-                    />
-                </div>
-                <div>
-                    <button type="submit" disabled={!bozzaToken.trim()}>✔️</button>
-                </div>
-            </form>
+        <div className="statusIntegrazione">
+            <FormTokenDmi onToken={setToken} />
         </div>
         )
     }
 
     if (stato === "caricamento") {
         return (
-        <div className="statusIntegrazione"> 
+        <div className="statusIntegrazione">
             <div className="flex gap-3 items-center">
                 <div>Collegamento all'app DMI…</div>
             </div>
@@ -74,7 +55,7 @@ export default function IntegrazioneApp(prop : propDmiBridge) {
 
     if (stato === "errore") {
         return (
-            <div className="statusIntegrazione"> 
+            <div className="statusIntegrazione">
                 <div className="flex gap-3 items-center">
                     <div className="max-w-[25vw]">{errore}</div>
                     <div className="flex">
@@ -91,7 +72,7 @@ export default function IntegrazioneApp(prop : propDmiBridge) {
     const giocatore = nomeGiocatore(dati)
 
     return (
-        <div className="statusIntegrazione"> 
+        <div className="statusIntegrazione">
             <div className="flex gap-3 items-center">
                 <div className="ml-1" data-tooltip-id="latsync" data-tooltip-content={oraSync(dati.syncedAt)}>
                     <strong>{nomeMostro(dati)}</strong>{giocatore && ` - ${giocatore}`}
