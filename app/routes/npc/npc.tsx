@@ -6,7 +6,12 @@ import "~/assets/css/npc.css";
 
 export function meta({ params }: Route.MetaArgs) {
     const npc = getNpc(params.id);
-    return [{ title: npc ? `${npc.nome} — NPC` : "NPC non trovato" }];
+    let text = npc ? `NPC ${npc.nome}` : "NPC non trovato"
+
+    return [
+    { title: `${text} - DMI` },
+    { name: "description", content: "Sito per la campagna di DnD Dungeon Monster Isekai" },
+  ];
 }
 
 export function clientLoader({ params }: Route.ClientLoaderArgs) {

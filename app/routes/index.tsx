@@ -1,7 +1,6 @@
 import MountainOverlay from "~/components/MountainOverlay";
 import type { Route } from "./+types/index";
 import SiteTitle from "~/components/SiteTitle";
-import { Link } from "react-router";
 import DmiBtn from "~/components/DmiBtn";
 import EmergencyMeeting from "~/components/EmergencyMeeting";
 import IntegrazioneApp from "~/components/IntegrazioneApp";
@@ -9,8 +8,8 @@ import useDmiBridge from "~/lib/useDmiBridge";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Dungeon Monster Isekai" },
+    { name: "description", content: "Sito per la campagna di DnD Dungeon Monster Isekai" },
   ];
 }
 

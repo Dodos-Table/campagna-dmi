@@ -1,9 +1,13 @@
 import NpcCard from "~/components/npc/NpcCard";
 import { getGruppiNpc } from "~/data/npcs";
 import "~/assets/css/npc.css";
+import type { Route } from "../+types";
 
-export function meta() {
-    return [{ title: "NPC" }];
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "NPCs - DMI" },
+    { name: "description", content: "Sito per la campagna di DnD Dungeon Monster Isekai" },
+  ];
 }
 
 export default function NpcIndex() {

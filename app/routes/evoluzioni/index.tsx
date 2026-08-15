@@ -8,7 +8,10 @@ import useDmiBridge from "~/lib/useDmiBridge";
 import { percorsoEvolutivo, schedaAttiva } from "~/lib/percorsoEvolutivo";
 
 export function meta({}: Route.MetaArgs) {
-    return [{ title: "Evoluzioni" }];
+  return [
+    { title: "Evoluzioni - DMI" },
+    { name: "description", content: "Sito per la campagna di DnD Dungeon Monster Isekai" },
+  ];
 }
 
 /** Il percorso evolutivo esiste solo se l'app DMI è collegata: senza dati non c'è nulla da mostrare. */
