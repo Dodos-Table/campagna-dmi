@@ -81,12 +81,6 @@ export default function EvoluzioniPage() {
                 </>
             )}
 
-            <div className="text-center mt-6">
-                <Link className="link" to="/">
-                    Torna alla home
-                </Link>
-            </div>
-
             {/* Solo a collegamento riuscito: negli altri stati la pagina mostra già
                 form ed errori a tutta larghezza, il badge li ripeterebbe. */}
             {dati && <IntegrazioneApp dmibridge={bridge} />}
