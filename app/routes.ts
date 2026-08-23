@@ -15,6 +15,9 @@ export default [
             ]),
             ...prefix("timeline", [
                 index("routes/timeline/index.tsx")
+            ]),
+            ...prefix("skill", [
+                index("routes/skill/index.tsx")
             ])
         ]),
 

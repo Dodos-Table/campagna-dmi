@@ -43,6 +43,10 @@
   }
 }
 
+.subtitle {
+  font-size: 1.8rem;
+}
+
 .link {
   text-decoration: var(--color-accent) underline wavy 2px;
   &:hover {

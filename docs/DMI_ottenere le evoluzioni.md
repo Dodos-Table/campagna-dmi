@@ -1,0 +1,1 @@
+aperta la scheda all'indirizzo http://127.0.0.1:32177, è possibile estrarre le evoluzioni apendo la console di sviluppatore e mostrare la variabile window.DMI_EVOLUTION_TREES

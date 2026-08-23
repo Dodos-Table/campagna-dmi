@@ -7,6 +7,7 @@ export interface DmiProfile {
     monsterName: string;
     playerName: string;
     currentForm: string;
+    skills: Array<any>;
 }
 
 /** Bonus alle statistiche concessi da un'evoluzione. Le chiavi assenti valgono 0. */
@@ -61,10 +62,10 @@ export interface DmiIdentity {
 export interface DmiCharacter {
     id: string;
     identity: DmiIdentity;
-    stats: Record<string, unknown>;
+    stats: Record<string, any>;
     resources: Record<string, unknown>;
     evolutionHistory: DmiEvolutionStep[];
-    skills: unknown[];
+    skills: Record<string, any>;
     statuses: unknown[];
     actions: Record<string, unknown>;
     target: Record<string, unknown>;

@@ -28,6 +28,7 @@ export default function Home() {
           <DmiBtn link="timeline">Timeline</DmiBtn>
           <DmiBtn link="evoluzioni">Evoluzioni</DmiBtn>
           <DmiBtn link="npc">NPCs</DmiBtn>
+          <DmiBtn link="skill">Skills</DmiBtn>
         </div>
       </div>
       <IntegrazioneApp dmibridge={dmiBridge}/>

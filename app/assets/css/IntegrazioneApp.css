@@ -1,5 +1,5 @@
 @import "tailwindcss";
 
 .statusIntegrazione {
-    @apply absolute bottom-0 left-0 bg-blue-400/40 p-2 md:rounded-tr-lg min-w-full md:min-w-auto m-auto md:m-0;
+    @apply fixed bottom-0 left-0 bg-blue-400/40 p-2 md:rounded-tr-lg min-w-full md:min-w-auto m-auto md:m-0;
 }
