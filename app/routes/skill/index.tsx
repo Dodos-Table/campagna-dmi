@@ -24,7 +24,7 @@ export default function Skill() {
     const dmiBridge = useDmiBridge();
 
 
-    const filterStatusLabel: Record<filterStatusEnum, string> = {
+    const filterStatusLabel: Record<number, string> = {
         0: "Tutte le skill",
         1: "Solo fisiche",
         2: "Solo magiche"
@@ -38,7 +38,7 @@ export default function Skill() {
             return []
         }
 
-        return getActiveScheda(dmiBridge?.dati).skills.map(elem => elem.catalogKey) as string[]
+        return getActiveScheda(dmiBridge?.dati).skills.map((elem: Record<string, any>) => elem.catalogKey) as string[]
     }, [dmiBridge.dati])
 
     const hasMP = useMemo(() => {
@@ -60,7 +60,7 @@ export default function Skill() {
         <p>Qui è presente la lista di skill selezionabili sulla scheda, alcune di queste skill necessitano di mana (MP).</p>
         <p>Se l'integrazione con la scheda è attiva, e il personaggio selezionato non ha MP, le skill magiche verranno <span className="text-gray-500 line-through">segnate</span></p>
 
-        <DmiBtn onClick={() => setFilterStatus(prev => (prev + 1) % (Object.keys(filterStatusLabel).length))}>{filterStatusLabel[filterStatus]}</DmiBtn>
+        <DmiBtn onClick={() => setFilterStatus(prev => (prev + 1) % (Object.keys(filterStatusLabel).length))}>{filterStatusLabel[filterStatus.valueOf()]}</DmiBtn>
 
         <h2 className="subtitle">Skill selezionate ({activeSkill.length})</h2>
 
@@ -84,7 +84,7 @@ export default function Skill() {
 
         {
             <div className="grid grid-cols-4 gap-4">
-                {activeSkill.map(elem => <SkillListElement owned={true} filter={filterStatus} hasMp={hasMP} data={elem} />)}
+                {activeSkill.map(elem => <SkillListElement key={elem.key} owned={true} filter={filterStatus} hasMp={hasMP} data={elem} />)}
             </div>
 
         }
@@ -93,7 +93,7 @@ export default function Skill() {
         <h2 className="subtitle">Skill rimanenti ({remainingSkill.length})</h2>
         
         <div className="grid grid-cols-4 gap-4">
-            {remainingSkill.map(elem => <SkillListElement filter={filterStatus} hasMp={hasMP} data={elem} />)}
+            {remainingSkill.map(elem => <SkillListElement key={elem.key} filter={filterStatus} hasMp={hasMP} data={elem} />)}
         </div>
 
 
