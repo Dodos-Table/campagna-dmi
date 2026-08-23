@@ -20,11 +20,8 @@ export default function TimelineElement({data}: Readonly<DataTimelineProp>) {
 
     const iconBgColor = data.color ?? "rgb(33, 150, 243)"
 
-    const contentStyle1= { background: iconBgColor, fill: '#fff' } // width: "2rem", height: "2rem", marginLeft: "calc(2rem / -2)"
-
-    const body_formated = (<Markdown>{data.body}</Markdown>)
-
-
+    const contentStyle1= { background: iconBgColor, fill: '#fff' } 
+    
     return (
         <VerticalTimelineElement
             className="vertical-timeline-element--work"
@@ -34,10 +31,10 @@ export default function TimelineElement({data}: Readonly<DataTimelineProp>) {
             icon={<IconMorph type={data.icon}/>}
 
         >
-            {data.title ? <h3 className="vertical-timeline-element-title text-xl">{data.title}</h3> : null}
+            {data.title ? <h3 className="vertical-timeline-element-title text-2xl">{data.title}</h3> : null}
             
             <div className="vertical-timeline-element-body">
-                {body_formated}
+                <Markdown>{data.body}</Markdown>
             </div>
         </VerticalTimelineElement>
     )
