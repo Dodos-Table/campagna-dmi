@@ -1,0 +1,10 @@
+
+
+.vertical-timeline-element-title,
+.vertical-timeline-element-body {
+    color: black
+}
+
+.vertical-timeline-element-body * {
+    margin: 0.5rem 0 0 !important;
+}

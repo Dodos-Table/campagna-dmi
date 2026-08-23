@@ -1,3 +1,9 @@
 [
-    { "title": "", "body": "Ogni persona del gruppo è morta", "data": "???" }
+    { 
+        "title": "L'inizio di questa storia", 
+        "body": "Ogni persona del gruppo è **morta**.\n\nLa vita ha giocato un brutto scherzo alle persone.", 
+        "data": "???",
+        "color": "#636363",
+        "icon": "skull"
+    }
 ]

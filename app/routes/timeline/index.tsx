@@ -1,5 +1,6 @@
 import TimelineVerical from "~/components/timeline/TimelineVertical";
 import type { Route } from "../+types";
+import "~/assets/css/timeline.css"
 
 export function meta({}: Route.MetaArgs) {
   return [
