@@ -1,11 +1,15 @@
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ChangeEvent } from "react";
 import DmiBtn from "~/components/DmiBtn";
 import IntegrazioneApp from "~/components/IntegrazioneApp";
 import SkillListElement from "~/components/skill/SkillListElement";
+import SkillModal from "~/components/skill/SkillModal";
 import data from "~/data/skills.json"
+import { gradoDaIdentity } from "~/lib/gradoSkill";
 import useDmiBridge from "~/lib/useDmiBridge";
 import type { DmiExport, DmiCharacter } from "~/types/dmi";
+import type { Skill as SkillData } from "~/types/skill";
+import "~/assets/css/skill.css"
 
 function getActiveScheda(dati: DmiExport | null): DmiCharacter {
     // non può tornare nullo
@@ -14,31 +18,52 @@ function getActiveScheda(dati: DmiExport | null): DmiCharacter {
     return attivo
 }
 
-export enum filterStatusEnum {
-    ALL,
-    FISICHE,
-    MAGICHE
-}
+// Il tipo del catalogo è dichiarato a mano: l'inferenza dal JSON produce
+// un'unione che non permette di leggere `variants` per chiave.
+const skills = data as unknown as SkillData[]
+
+const MP_FILTERS = [
+    { label: "Skill fisiche+magiche", match: (_skill: SkillData) => true },
+    { label: "Solo fisiche", match: (skill: SkillData) => skill.mp === 0 },
+    { label: "Solo magiche", match: (skill: SkillData) => skill.mp > 0 },
+] as const
+
+const CATEGORY_FILTERS = [
+    { label: "Tutte le categorie", match: (_skill: SkillData) => true },
+    { label: "Categoria Status", match: (skill: SkillData) => skill.category.toLowerCase() === "status" },
+    { label: "Categoria Sensory", match: (skill: SkillData) => skill.category.toLowerCase() === "sensory" },
+    { label: "Categoria Mobility", match: (skill: SkillData) => skill.category.toLowerCase() === "mobility" },
+    { label: "Categoria Combat", match: (skill: SkillData) => skill.category.toLowerCase() === "combat" },
+    { label: "Categoria Breath", match: (skill: SkillData) => skill.category.toLowerCase() === "breath" },
+    { label: "Categoria Biological", match: (skill: SkillData) => skill.category.toLowerCase() === "biological" },
+    { label: "Categoria Field", match: (skill: SkillData) => skill.category.toLowerCase() === "field" },
+    { label: "Categoria Offensive", match: (skill: SkillData) => skill.category.toLowerCase() === "offensive" },
+    { label: "Categoria Support", match: (skill: SkillData) => skill.category.toLowerCase() === "support" },
+    { label: "Categoria Boss", match: (skill: SkillData) => skill.category.toLowerCase() === "boss" },
+    { label: "Categoria Cheat", match: (skill: SkillData) => skill.category.toLowerCase() === "cheat" },
+    { label: "Categoria Speciali", match: (skill: SkillData) => skill.category.toLowerCase() === "speciali" }
+]
 
 export default function Skill() {
     const dmiBridge = useDmiBridge();
 
+    const [modalOpen, setModalOpen] = useState(false)
+    const [clickedSkill, setClickedSkill] = useState<SkillData | null>(null)
 
-    const filterStatusLabel: Record<number, string> = {
-        0: "Tutte le skill",
-        1: "Solo fisiche",
-        2: "Solo magiche"
-    }
+    const [mpFilter, setMpFilter] = useState(0)
+    const nextMpFilter = () => setMpFilter(prev => (prev + 1) % MP_FILTERS.length)
 
-    const [filterStatus, setFilterStatus] = useState<number>(0)
-
+    const [categoriaFilter, setCategoriaFilter] = useState(0)
+    const nextCategoryFilter = (e: ChangeEvent<HTMLSelectElement>) => setCategoriaFilter(Number.parseInt(e.target.value))
 
     const activeSkillId = useMemo(() => {
         if (!dmiBridge.dati) {
-            return []
+            return new Set<string>()
         }
 
-        return getActiveScheda(dmiBridge?.dati).skills.map((elem: Record<string, any>) => elem.catalogKey) as string[]
+        return new Set(
+            getActiveScheda(dmiBridge.dati).skills.map((elem: Record<string, any>) => elem.catalogKey as string)
+        )
     }, [dmiBridge.dati])
 
     const hasMP = useMemo(() => {
@@ -51,8 +76,22 @@ export default function Skill() {
         return Object.values(MPstats).reduce((a, b) => a + b, 0) > 0
     }, [dmiBridge.dati])
 
-    const activeSkill = data.filter(elem => activeSkillId.includes(elem.key))
-    const remainingSkill = data.filter(elem => !activeSkillId.includes(elem.key))
+    const gradoPersonaggio = useMemo(
+        () => gradoDaIdentity(dmiBridge.dati?.character?.identity),
+        [dmiBridge.dati]
+    )
+
+    const visibleSkill = useMemo(
+        () => {
+            return skills
+                .filter(skill => MP_FILTERS[mpFilter].match(skill))
+                .filter(skill => CATEGORY_FILTERS[categoriaFilter].match(skill))
+        },
+        [mpFilter, categoriaFilter]
+    )
+    const activeSkill = visibleSkill.filter(elem => activeSkillId.has(elem.key))
+    const remainingSkill = visibleSkill.filter(elem => !activeSkillId.has(elem.key))
+
 
     return <>
         <h1 className="title text-isekai text-center">Skill</h1>
@@ -60,7 +99,19 @@ export default function Skill() {
         <p>Qui è presente la lista di skill selezionabili sulla scheda, alcune di queste skill necessitano di mana (MP).</p>
         <p>Se l'integrazione con la scheda è attiva, e il personaggio selezionato non ha MP, le skill magiche verranno <span className="text-gray-500 line-through">segnate</span></p>
 
-        <DmiBtn onClick={() => setFilterStatus(prev => (prev + 1) % (Object.keys(filterStatusLabel).length))}>{filterStatusLabel[filterStatus.valueOf()]}</DmiBtn>
+        <div className="flex flex-row justify-around">
+            <div>
+                <DmiBtn onClick={nextMpFilter}>{MP_FILTERS[mpFilter].label}</DmiBtn>
+            </div>
+            <div>
+                <select name="skillclass" id="skillclass" className="btn" onChange={nextCategoryFilter} value={categoriaFilter}>
+                    {CATEGORY_FILTERS.map((elem, index) => <option key={elem.label} value={index} >{elem.label}</option>)}
+                </select>
+            </div>
+        </div>
+
+
+
 
         <h2 className="subtitle">Skill selezionate ({activeSkill.length})</h2>
 
@@ -83,19 +134,25 @@ export default function Skill() {
         }
 
         {
-            <div className="grid grid-cols-4 gap-4">
-                {activeSkill.map(elem => <SkillListElement key={elem.key} owned={true} filter={filterStatus} hasMp={hasMP} data={elem} />)}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 text-center md:select-none">
+                {activeSkill.map(elem => <SkillListElement key={elem.key} owned={true} hasMp={hasMP} data={elem} setClickedSkill={setClickedSkill} setModalOpen={setModalOpen} />)}
             </div>
 
         }
 
 
         <h2 className="subtitle">Skill rimanenti ({remainingSkill.length})</h2>
-        
-        <div className="grid grid-cols-4 gap-4">
-            {remainingSkill.map(elem => <SkillListElement key={elem.key} filter={filterStatus} hasMp={hasMP} data={elem} />)}
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 text-center md:select-none">
+            {remainingSkill.map(elem => <SkillListElement key={elem.key} hasMp={hasMP} data={elem} setClickedSkill={setClickedSkill} setModalOpen={setModalOpen} />)}
         </div>
 
+        <SkillModal
+            skill={clickedSkill}
+            gradoPersonaggio={gradoPersonaggio}
+            isOpen={modalOpen}
+            onClose={() => setModalOpen(false)}
+        />
 
         <IntegrazioneApp dmibridge={dmiBridge} />
     </>

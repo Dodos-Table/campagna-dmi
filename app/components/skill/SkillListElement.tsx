@@ -1,35 +1,25 @@
-import { filterStatusEnum } from "~/routes/skill";
+import type { Dispatch, SetStateAction } from "react"
+import type { Skill } from "~/types/skill"
 
 interface SkillListElementProp {
-    filter: number
     hasMp: boolean
-    data: any
+    data: Skill
     owned?: boolean
+    setModalOpen: Dispatch<SetStateAction<boolean>>
+    setClickedSkill: Dispatch<SetStateAction<Skill|null>>
 }
 
-export default function SkillListElement(prop: SkillListElementProp) {
-    if (prop.filter != filterStatusEnum.ALL) {
-        switch (prop.filter) {
-            case filterStatusEnum.FISICHE: // solo fisiche
-                if(prop.data.mp > 0){ // escludo le maghiche
-                    return <></>;
-                } 
-                break;
-            case filterStatusEnum.MAGICHE: // solo magiche
-                if(prop.data.mp == 0){ // escludo le fisiche
-                    return <></>;
-                } 
-                break;
-            default:
-                break;
-        }
+export default function SkillListElement(prop: Readonly<SkillListElementProp>) {
+
+    const handleClick = () => {
+        prop.setClickedSkill(prop.data)
+        prop.setModalOpen(true)
     }
 
 
     let validForMP = (!prop.hasMp && prop.data.mp > 0) ? "text-gray-500 line-through" : "text-red-500"
 
-    return <div key={prop.data.key} className="text-xl">
+    return <div className="skillname" onClick={handleClick} >
         <div className={prop.owned ? "text-green-500" : validForMP}>{prop.data.name}</div>
-        <div></div>
     </div>
 }

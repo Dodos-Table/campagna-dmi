@@ -44,7 +44,12 @@ export interface DmiIdentity {
     level?: number;
     evolutionTree?: string;
     evolutionLine?: string;
-    evolutionTier?: string;
+    /**
+     * Grado evolutivo. Negli export osservati è un oggetto con una chiave per
+     * grado (Lesser/Greater/Perfect, a volte Unico), non una semplice etichetta:
+     * va letto con `gradoDaIdentity` in `~/lib/gradoSkill`.
+     */
+    evolutionTier?: unknown;
     evolutionStart?: string;
     currentEvolution?: string;
     nextEvolution?: string;

@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+.skillname {
+    @apply text-xl cursor-pointer;
+    transition: 200ms;
+    
+}
+
+.skillname:hover {
+    transition: 200ms;
+    text-shadow: 0 0 8px var(--color-accent);
+}
+
+/* ---------- modal ---------- */
+
+.skill-modal__sottotitolo {
+    margin-bottom: 0.6rem;
+    color: color-mix(in oklch, var(--color-accent) 70%, transparent);
+    font-size: 0.9rem;
+}
+
+.skill-modal__grado-unico {
+    margin-bottom: 0.6rem;
+    color: color-mix(in oklch, var(--color-accent) 70%, transparent);
+    font-size: 0.9rem;
+}
+
+.skill-modal__avviso {
+    margin-bottom: 0.6rem;
+    color: color-mix(in oklch, var(--color-accent) 60%, transparent);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.skill-modal__note {
+    margin-top: 1rem;
+    color: color-mix(in oklch, var(--color-accent) 55%, transparent);
+    font-size: 0.8rem;
+}
+
+/* ---------- gradi ---------- */
+
+.skill-gradi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.skill-grado {
+    padding: 0.2rem 0.9rem;
+    border: 2px solid var(--color-accent);
+    border-radius: 999px;
+    color: var(--color-accent);
+    cursor: pointer;
+    transition: 200ms;
+}
+
+.skill-grado:hover {
+    border-color: lch(from var(--color-accent) calc(l - 7) c h);
+    background-color: lch(from var(--color-secondary) calc(l - 7) c h);
+    transition: 200ms;
+}
+
+.skill-grado--attiva {
+    background-color: var(--color-accent);
+    color: var(--color-secondary);
+    font-weight: 700;
+    text-shadow: none;
+}
+
+/* Pallino sul grado corrispondente a quello del personaggio collegato. */
+.skill-grado--personaggio::after {
+    content: "";
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    margin-left: 0.4rem;
+    border-radius: 50%;
+    background-color: currentColor;
+    vertical-align: middle;
+}
+
+/* ---------- corpo ---------- */
+
+.skill-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.3rem 1rem;
+}
+
+.skill-effetto {
+    margin-top: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    border-left: 3px solid var(--color-accent);
+    white-space: pre-line;
+}
