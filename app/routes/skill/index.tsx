@@ -99,7 +99,7 @@ export default function Skill() {
         <p>Qui è presente la lista di skill selezionabili sulla scheda, alcune di queste skill necessitano di mana (MP).</p>
         <p>Se l'integrazione con la scheda è attiva, e il personaggio selezionato non ha MP, le skill magiche verranno <span className="text-gray-500 line-through">segnate</span></p>
 
-        <div className="flex flex-row justify-around">
+        <div className="flex md:flex-row flex-col justify-around">
             <div>
                 <DmiBtn onClick={nextMpFilter}>{MP_FILTERS[mpFilter].label}</DmiBtn>
             </div>

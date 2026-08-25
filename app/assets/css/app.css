@@ -88,4 +88,8 @@
   overflow: auto;
   outline: none;
   padding: 1rem;
+
+  @media screen and (max-width: 600px) {
+    inset: 0.5rem
+  }
 }
