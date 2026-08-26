@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "~/assets/css/app.css";
 import "~/assets/css/fonts.css";
 import favicon from "~/assets/img/icon-192.png"
+import 'react-tooltip/dist/react-tooltip.css'
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

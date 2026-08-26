@@ -6,7 +6,7 @@ import EmergencyMeeting from "~/components/EmergencyMeeting";
 import IntegrazioneApp from "~/components/IntegrazioneApp";
 import useDmiBridge from "~/lib/useDmiBridge";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Dungeon Monster Isekai" },
     { name: "description", content: "Sito per la campagna di DnD Dungeon Monster Isekai" },
@@ -17,22 +17,33 @@ export default function Home() {
 
   const dmiBridge = useDmiBridge();
 
+  const tooltip_scheda = (dmiBridge.stato !== "connesso") ? "Avvia il programma della scheda DMI" : undefined
 
   return (
     <>
-      <MountainOverlay/>
+      <MountainOverlay />
       <div className="container">
-        <SiteTitle/>
+        <SiteTitle />
         <div className="text-center flex flex-col gap-3">
-          <DmiBtn link="http://127.0.0.1:32177/" newPage={true}>Scheda Personaggio</DmiBtn>
-          <DmiBtn link="timeline">Timeline</DmiBtn>
-          <DmiBtn link="evoluzioni">Evoluzioni</DmiBtn>
-          <DmiBtn link="npc">NPCs</DmiBtn>
-          <DmiBtn link="skill">Skills</DmiBtn>
+          <div>
+            <DmiBtn link="http://127.0.0.1:32177/" newPage={true} disabled={dmiBridge.stato !== "connesso"} tooltip={tooltip_scheda}>Scheda Personaggio</DmiBtn>
+          </div>
+          <div>
+            <DmiBtn link="timeline">Timeline</DmiBtn>
+          </div>
+          <div>
+            <DmiBtn link="evoluzioni">Evoluzioni</DmiBtn>
+          </div>
+          <div>
+            <DmiBtn link="npc">NPCs</DmiBtn>
+          </div>
+          <div>
+            <DmiBtn link="skill">Skills</DmiBtn>
+          </div>
         </div>
       </div>
-      <IntegrazioneApp dmibridge={dmiBridge}/>
-      <EmergencyMeeting/>
+      <IntegrazioneApp dmibridge={dmiBridge} />
+      <EmergencyMeeting />
     </>
   )
 }
