@@ -18,6 +18,9 @@ export default [
             ]),
             ...prefix("skill", [
                 index("routes/skill/index.tsx")
+            ]),
+            ...prefix("attivita", [
+                index("routes/attivita/index.tsx")
             ])
         ]),
 

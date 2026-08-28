@@ -1,17 +1,9 @@
 import { Tooltip } from "react-tooltip"
 import FormTokenDmi from "~/components/FormTokenDmi"
+import { nomePersonaggio } from "~/lib/logDmi"
 import type { DmiBridge } from "~/lib/useDmiBridge"
 import type { DmiExport } from "~/types/dmi"
 import "~/assets/css/IntegrazioneApp.css"
-
-/** Il nome vive in `character.identity`, che può essere incompleta: fallback sull'indice profili. */
-function nomeMostro(dati: DmiExport): string {
-    const identity = dati.character.identity
-    if (typeof identity.monsterName === "string" && identity.monsterName) return identity.monsterName
-
-    const attivo = dati.profiles.find((p) => p.id === dati.activeId)
-    return attivo?.monsterName ?? "Scheda senza nome"
-}
 
 function nomeGiocatore(dati: DmiExport): string | null {
     const identity = dati.character.identity
@@ -75,7 +67,7 @@ export default function IntegrazioneApp(prop: Readonly<IntegrazioneAppProp>) {
         <div className="statusIntegrazione">
             <div className="flex gap-3 items-center">
                 <div className="ml-1" data-tooltip-id="latsync" data-tooltip-content={oraSync(dati.syncedAt)}>
-                    <strong>{nomeMostro(dati)}</strong>{giocatore && ` - ${giocatore}`}
+                    <strong>{nomePersonaggio(dati)}</strong>{giocatore && ` - ${giocatore}`}
                 </div>
                 <div className="flex">
                     <div onClick={ricarica} className="cursor-pointer">🔄</div>

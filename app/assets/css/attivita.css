@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+.feedAttivita {
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+/* ---------- stato del collegamento ---------- */
+
+.statoFeed {
+    @apply flex items-center gap-2;
+
+    margin-bottom: 1rem;
+    color: color-mix(in oklch, var(--color-accent) 60%, transparent);
+    font-size: 0.85rem;
+}
+
+.statoFeed-spia {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.statoFeed--avvio .statoFeed-spia {
+    animation: statoFeed-pulsa 1.4s ease-in-out infinite;
+}
+
+.statoFeed--connesso {
+    color: color-mix(in oklch, var(--color-accent) 75%, transparent);
+}
+
+.statoFeed--disconnesso {
+    color: color-mix(in oklch, #ffb4b4 80%, transparent);
+}
+
+@keyframes statoFeed-pulsa {
+    50% { opacity: 0.25; }
+}
+
+/* ---------- lista eventi ---------- */
+
+.feedAttivita-vuoto {
+    color: color-mix(in oklch, var(--color-text) 65%, transparent);
+    font-style: italic;
+}
+
+.feedAttivita-lista {
+    @apply flex flex-col gap-2;
+}
+
+.eventoAttivita {
+    padding: 0.6rem 0.8rem;
+    border: 2px solid color-mix(in oklch, var(--color-accent) 25%, transparent);
+    border-radius: 0.4rem;
+    background-color: color-mix(in oklch, var(--color-secondary) 55%, transparent);
+}
+
+/* Pubblicato da questo browser: il bordo pieno lo stacca dagli altri giocatori. */
+.eventoAttivita--mio {
+    border-color: var(--color-accent);
+}
+
+.eventoAttivita-intestazione {
+    @apply flex flex-wrap items-baseline justify-between gap-2;
+
+    margin-bottom: 0.25rem;
+}
+
+.eventoAttivita-ora {
+    color: color-mix(in oklch, var(--color-text) 55%, transparent);
+    font-size: 0.8rem;
+}
+
+.eventoAttivita-messaggio {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
