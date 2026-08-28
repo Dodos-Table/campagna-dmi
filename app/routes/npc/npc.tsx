@@ -1,7 +1,7 @@
 import { Link, data } from "react-router";
 import type { Route } from "./+types/npc";
 import NpcRitratto from "~/components/npc/NpcRitratto";
-import { getNpc } from "~/data/npcs";
+import { getNpc } from "~/data/npc-loader";
 import "~/assets/css/npc.css";
 
 export function meta({ params }: Route.MetaArgs) {

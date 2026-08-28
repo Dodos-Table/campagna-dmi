@@ -1,5 +1,5 @@
 import NpcCard from "~/components/npc/NpcCard";
-import { getGruppiNpc } from "~/data/npcs";
+import { getGruppiNpc } from "~/data/npc-loader";
 import "~/assets/css/npc.css";
 import type { Route } from "../+types";
 
