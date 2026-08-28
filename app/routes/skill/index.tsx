@@ -28,20 +28,15 @@ const MP_FILTERS = [
     { label: "Solo magiche", match: (skill: SkillData) => skill.mp > 0 },
 ] as const
 
+
+const JSON_CATEGORY = Array.from(new Set(data.map(elem => elem.section.split(' — ')[0])))
+    .map(elem => {
+        return {label: elem, match: (skill: SkillData) => skill.section.startsWith(elem)}
+    })
+
 const CATEGORY_FILTERS = [
     { label: "Tutte le categorie", match: (_skill: SkillData) => true },
-    { label: "Categoria Status", match: (skill: SkillData) => skill.category.toLowerCase() === "status" },
-    { label: "Categoria Sensory", match: (skill: SkillData) => skill.category.toLowerCase() === "sensory" },
-    { label: "Categoria Mobility", match: (skill: SkillData) => skill.category.toLowerCase() === "mobility" },
-    { label: "Categoria Combat", match: (skill: SkillData) => skill.category.toLowerCase() === "combat" },
-    { label: "Categoria Breath", match: (skill: SkillData) => skill.category.toLowerCase() === "breath" },
-    { label: "Categoria Biological", match: (skill: SkillData) => skill.category.toLowerCase() === "biological" },
-    { label: "Categoria Field", match: (skill: SkillData) => skill.category.toLowerCase() === "field" },
-    { label: "Categoria Offensive", match: (skill: SkillData) => skill.category.toLowerCase() === "offensive" },
-    { label: "Categoria Support", match: (skill: SkillData) => skill.category.toLowerCase() === "support" },
-    { label: "Categoria Boss", match: (skill: SkillData) => skill.category.toLowerCase() === "boss" },
-    { label: "Categoria Cheat", match: (skill: SkillData) => skill.category.toLowerCase() === "cheat" },
-    { label: "Categoria Speciali", match: (skill: SkillData) => skill.category.toLowerCase() === "speciali" }
+    ...JSON_CATEGORY
 ]
 
 export default function Skill() {
