@@ -1,4 +1,4 @@
-import type { DmiExport } from "~/types/dmi";
+import type { DmiBridgeNew, DmiExport } from "~/types/dmi";
 
 export const DMI_ENDPOINT = "http://127.0.0.1:32177/export";
 
@@ -9,7 +9,7 @@ export const DMI_TOKEN_STORAGE_KEY = "dmi-bridge-token";
  * Legge la scheda attiva dal bridge locale.
  * Il token è personale del computer e va copiato da "Collegamento sito" nell'app.
  */
-export async function fetchSchedaDmi(token: string, signal?: AbortSignal): Promise<DmiExport> {
+export async function fetchSchedaDmi (token: string, signal?: AbortSignal): Promise<DmiBridgeNew> {
     let res: Response;
 
     try {
@@ -33,5 +33,5 @@ export async function fetchSchedaDmi(token: string, signal?: AbortSignal): Promi
         throw new Error(`DMI bridge: ${res.status}`);
     }
 
-    return (await res.json()) as DmiExport;
+    return (await res.json()) as DmiBridgeNew;
 }

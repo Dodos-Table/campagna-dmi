@@ -1,3 +1,4 @@
+import { DmiBridge } from '../lib/useDmiBridge';
 // Tipi dello snapshot esposto dal bridge locale dell'app DMI.
 // Riferimento: DMI_v0.9.7_collegamento_sito.md, sezione "Struttura principale del JSON".
 
@@ -79,6 +80,11 @@ export interface DmiCharacter {
     journal: Record<string, unknown>;
     timeline: unknown[];
     log: unknown[];
+}
+
+export interface  DmiBridgeNew {
+    'dmi-monster-sheet-pwa-v1': string
+    'dmi-theme': string
 }
 
 export interface DmiExport {
