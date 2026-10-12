@@ -4,7 +4,7 @@ import type {
     BonusEvoluzione,
     NodoEvoluzioneData,
 } from "~/types/evoluzioni";
-import type { DmiBonuses, DmiEvolutionStep, DmiExport, DmiProfile } from "~/types/dmi";
+import type { DmiBonuses, DmiEvolutionStep, DmiExport } from "~/types/dmi";
 
 /** Ordine di visualizzazione dei bonus, uguale a quello della scheda nell'app DMI. */
 const SIGLE_BONUS: (keyof DmiBonuses)[] = ["HP", "MP", "ATK", "DEF", "AGL", "INTMEN"];
@@ -18,36 +18,14 @@ function stessoNome(a: string, b: string): boolean {
     return a.toLocaleLowerCase() === b.toLocaleLowerCase();
 }
 
-export interface SchedaAttiva {
-    /** Voce dell'indice profili che corrisponde ad `activeId`, se presente. */
-    profilo: DmiProfile | null;
-    /** `character` non è la scheda indicata da `activeId`: lo snapshot è incoerente. */
-    disallineata: boolean;
-}
-
-/**
- * L'endpoint espone una sola scheda: `activeId` dice quale dovrebbe essere.
- * Se i due non combaciano i dati restano usabili, ma vanno segnalati come dubbi.
- */
-export function schedaAttiva(dati: DmiExport): SchedaAttiva {
-    return {
-        profilo: dati.profiles.find((p) => p.id === dati.activeId) ?? null,
-        disallineata: dati.character.id !== dati.activeId,
-    };
-}
-
-function nomeMostro(dati: DmiExport, profilo: DmiProfile | null): string {
-    return (
-        testo(dati.character.identity.monsterName) ||
-        testo(profilo?.monsterName) ||
-        "Scheda senza nome"
-    );
+function nomeMostro(dati: DmiExport): string {
+    return testo(dati.character.identity.monsterName) || "Scheda senza nome";
 }
 
 /** Riga sotto il titolo: famiglia, linea evolutiva e livello, saltando i campi vuoti. */
-function sottotitolo(dati: DmiExport, profilo: DmiProfile | null): string | undefined {
+function sottotitolo(dati: DmiExport): string | undefined {
     const identity = dati.character.identity;
-    const giocatore = testo(identity.playerName) || testo(profilo?.playerName);
+    const giocatore = testo(identity.playerName);
     const linea = testo(identity.evolutionLine) || testo(identity.evolutionTree);
 
     const pezzi = [
@@ -97,7 +75,6 @@ function inOrdine(storia: DmiEvolutionStep[]): DmiEvolutionStep[] {
  */
 export function percorsoEvolutivo(dati: DmiExport): AlberoEvolutivo {
     const identity = dati.character.identity;
-    const { profilo } = schedaAttiva(dati);
 
     const nodi: NodoEvoluzioneData[] = inOrdine(dati.character.evolutionHistory ?? []).map(
         (passo, indice) => ({
@@ -138,8 +115,8 @@ export function percorsoEvolutivo(dati: DmiExport): AlberoEvolutivo {
 
     return {
         id: dati.character.id,
-        titolo: nomeMostro(dati, profilo),
-        sottotitolo: sottotitolo(dati, profilo),
+        titolo: nomeMostro(dati),
+        sottotitolo: sottotitolo(dati),
         nodi,
         archi,
     };

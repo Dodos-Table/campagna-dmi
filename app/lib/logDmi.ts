@@ -2,9 +2,10 @@ import type { VoceLog } from "~/types/attivita";
 import type { DmiExport } from "~/types/dmi";
 
 /**
- * `character.log` è dichiarato `unknown[]` dal doc del bridge: la forma delle
- * voci non è documentata. Come per `gradoDaIdentity` in `~/lib/gradoSkill`,
- * accettiamo più grafie invece di scommettere su una sola.
+ * Le voci di `character.log` oggi hanno la forma di `DmiLogEntry` (`id`, `at`,
+ * `message`), ma il formato dell'app non è documentato e può cambiare. Come per
+ * `gradoDaIdentity` in `~/lib/gradoSkill`, accettiamo più grafie invece di
+ * scommettere su una sola.
  */
 const CHIAVI_ID = ["id", "uid", "_id", "eventId"] as const;
 const CHIAVI_TESTO = ["message", "text", "msg", "testo", "descrizione", "description"] as const;
@@ -53,7 +54,8 @@ function isoVoce(voce: Record<string, unknown>): string | null {
  * distinguere un evento nuovo da uno già pubblicato.
  */
 export function vociLog(dati: DmiExport | null): VoceLog[] {
-    const log = dati?.character?.log;
+    // Letto come `unknown`: il tipo descrive la forma attesa, non quella garantita.
+    const log: unknown = dati?.character?.log;
     if (!Array.isArray(log)) return [];
 
     const voci: VoceLog[] = [];
@@ -76,11 +78,8 @@ export function vociLog(dati: DmiExport | null): VoceLog[] {
     return voci;
 }
 
-/** Il nome vive in `character.identity`, che può essere incompleta: fallback sull'indice profili. */
+/** Il nome vive in `character.identity`, che può essere incompleta. */
 export function nomePersonaggio(dati: DmiExport): string {
-    const identity = dati.character.identity;
-    if (typeof identity.monsterName === "string" && identity.monsterName) return identity.monsterName;
-
-    const attivo = dati.profiles.find((p) => p.id === dati.activeId);
-    return attivo?.monsterName ?? "Scheda senza nome";
+    const nome = dati.character.identity.monsterName;
+    return typeof nome === "string" && nome ? nome : "Scheda senza nome";
 }

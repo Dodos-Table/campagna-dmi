@@ -90,3 +90,67 @@ Alias disponibile: `http://127.0.0.1:32177/api/sheet`.
 - Collegamento in sola lettura: il sito non può modificare la scheda.
 - Nessun backend remoto e nessuna sincronizzazione cloud.
 - L'endpoint restituisce la scheda attiva, non l'intero localStorage.
+
+## Struttura attuale della risposta
+
+La "Struttura principale del JSON" descritta sopra non è più quella restituita da `/export`. Ora l'endpoint restituisce le voci di localStorage dell'app, come stringhe:
+
+```json
+{
+  "dmi-monster-sheet-pwa-v1": "<JSON serializzato>",
+  "dmi-theme": "..."
+}
+```
+
+Il valore di `dmi-monster-sheet-pwa-v1`, dopo il parse:
+
+```json
+{
+  "version": 20,
+  "activeId": "...",
+  "profiles": [
+    {
+      "id": "...",
+      "inField": true,
+      "identity": {
+        "monsterName": "...",
+        "playerName": "...",
+        "level": 16,
+        "exp": 51,
+        "evolutionTree": "taratect",
+        "evolutionLine": "web-control",
+        "evolutionStart": "...",
+        "currentEvolution": "...",
+        "nextEvolution": "...",
+        "species": "...",
+        "family": "...",
+        "evolutionTier": "Lesser"
+      },
+      "stats": { "MP": { "base": 40, "evolution": 0, "equip": 0, "skill": 0, "other": 0 } },
+      "resources": {},
+      "evolutionHistory": [],
+      "skills": [{ "id": "...", "catalogKey": "...", "name": "...", "grade": "...", "mp": 0 }],
+      "statuses": [],
+      "actions": {},
+      "target": {},
+      "abilities": {},
+      "equipment": {},
+      "journal": {},
+      "timeline": [],
+      "log": [{ "id": "...", "at": "2026-10-12T20:08:09.003Z", "round": 1, "message": "..." }],
+      "portrait": "data:image/...",
+      "levelProgression": {},
+      "directModifiers": {},
+      "resourcePointInvestments": {}
+    }
+  ]
+}
+```
+
+- `profiles` contiene le schede **complete** di tutti i personaggi; quella attiva è la voce con `id === activeId`.
+- I campi anagrafici restano in `identity`; alcune schede ne hanno meno di altre (`evolutionTier` può mancare o essere in minuscolo).
+- `stats` ha una voce per sigla (HP, MP, ATK, DEF, AGL, INTMEN), scomposta per provenienza.
+- `portrait` è un data URI e può pesare centinaia di KB: la risposta intera supera facilmente gli 800 KB.
+- Non ci sono più `schemaVersion`, `appVersion`, `storageVersion`, `syncedAt` e `profileCount`.
+
+Il sito normalizza la risposta in `fetchSchedaDmi` (`app/lib/dmiBridge.ts`): parse della stringa e profilo attivo esposto come `character`, così il resto del sito continua a leggere `dati.character`.
