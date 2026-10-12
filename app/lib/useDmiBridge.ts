@@ -64,7 +64,7 @@ export default function useDmiBridge(opzioni?: OpzioniDmiBridge): DmiBridge {
         fetchSchedaDmi(token, controller.signal)
             .then((scheda) => {
                 tokenTentato.current = token;
-                setDati(JSON.parse(scheda['dmi-monster-sheet-pwa-v1']) as DmiExport);
+                setDati(scheda);
                 setErrore(null);
                 setStato("connesso");
             })

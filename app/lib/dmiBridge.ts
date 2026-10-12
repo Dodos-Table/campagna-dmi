@@ -1,15 +1,38 @@
-import type { DmiBridgeNew, DmiExport } from "~/types/dmi";
+import type { DmiBridgeRisposta, DmiExport, DmiStorage } from "~/types/dmi";
 
 export const DMI_ENDPOINT = "http://127.0.0.1:32177/export";
 
 /** Chiave nostra: `dmi-monster-sheet-pwa-v1` appartiene all'app DMI, non va toccata. */
 export const DMI_TOKEN_STORAGE_KEY = "dmi-bridge-token";
 
+/** Chiave di localStorage dell'app DMI sotto cui il bridge espone le schede. */
+const CHIAVE_SCHEDE = "dmi-monster-sheet-pwa-v1";
+
 /**
- * Legge la scheda attiva dal bridge locale.
+ * Il bridge restituisce le schede come stringa JSON, con la scheda attiva
+ * indicata solo da `activeId`: qui le si dà una forma sola per tutto il sito.
+ */
+function normalizza(risposta: DmiBridgeRisposta): DmiExport {
+    let storage: DmiStorage;
+    try {
+        storage = JSON.parse(risposta[CHIAVE_SCHEDE]) as DmiStorage;
+    } catch {
+        throw new Error("Dati dell'app DMI non leggibili.");
+    }
+
+    const character = storage?.profiles?.find((p) => p.id === storage.activeId);
+    if (!character) {
+        throw new Error("La scheda attiva non è presente nei dati dell'app DMI.");
+    }
+
+    return { ...storage, character };
+}
+
+/**
+ * Legge le schede dal bridge locale, con quella attiva in `character`.
  * Il token è personale del computer e va copiato da "Collegamento sito" nell'app.
  */
-export async function fetchSchedaDmi (token: string, signal?: AbortSignal): Promise<DmiBridgeNew> {
+export async function fetchSchedaDmi (token: string, signal?: AbortSignal): Promise<DmiExport> {
     let res: Response;
 
     try {
@@ -33,5 +56,5 @@ export async function fetchSchedaDmi (token: string, signal?: AbortSignal): Prom
         throw new Error(`DMI bridge: ${res.status}`);
     }
 
-    return (await res.json()) as DmiBridgeNew;
+    return normalizza((await res.json()) as DmiBridgeRisposta);
 }

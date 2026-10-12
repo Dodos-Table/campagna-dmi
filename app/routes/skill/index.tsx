@@ -7,16 +7,8 @@ import SkillModal from "~/components/skill/SkillModal";
 import data from "~/data/skills.json"
 import { gradoDaIdentity } from "~/lib/gradoSkill";
 import useDmiBridge from "~/lib/useDmiBridge";
-import type { DmiExport, DmiCharacter } from "~/types/dmi";
 import type { Skill as SkillData } from "~/types/skill";
 import "~/assets/css/skill.css"
-
-function getActiveScheda(dati: DmiExport | null): DmiCharacter {
-    // non può tornare nullo
-    const attivo = dati?.character as DmiCharacter
-
-    return attivo
-}
 
 // Il tipo del catalogo è dichiarato a mano: l'inferenza dal JSON produce
 // un'unione che non permette di leggere `variants` per chiave.
@@ -56,9 +48,7 @@ export default function Skill() {
             return new Set<string>()
         }
 
-        return new Set(
-            getActiveScheda(dmiBridge.dati).skills.map((elem: Record<string, any>) => elem.catalogKey as string)
-        )
+        return new Set(dmiBridge.dati.character.skills.map(elem => elem.catalogKey))
     }, [dmiBridge.dati])
 
     const hasMP = useMemo(() => {
@@ -66,7 +56,7 @@ export default function Skill() {
             return true
         }
 
-        let MPstats = (getActiveScheda(dmiBridge?.dati).stats.MP as Record<string, number>)
+        const MPstats = dmiBridge.dati.character.stats.MP
 
         return Object.values(MPstats).reduce((a, b) => a + b, 0) > 0
     }, [dmiBridge.dati])

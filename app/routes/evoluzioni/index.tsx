@@ -5,7 +5,7 @@ import AlberoEvoluzioni from "~/components/evoluzioni/AlberoEvoluzioni";
 import FormTokenDmi from "~/components/FormTokenDmi";
 import IntegrazioneApp from "~/components/IntegrazioneApp";
 import useDmiBridge from "~/lib/useDmiBridge";
-import { percorsoEvolutivo, schedaAttiva } from "~/lib/percorsoEvolutivo";
+import { percorsoEvolutivo } from "~/lib/percorsoEvolutivo";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -22,7 +22,6 @@ export default function EvoluzioniPage() {
     // `AlberoEvoluzioni` memoizza il layout sull'albero: ricostruirlo ad ogni render
     // annullerebbe quella memo.
     const albero = useMemo(() => (dati ? percorsoEvolutivo(dati) : null), [dati]);
-    const disallineata = dati ? schedaAttiva(dati).disallineata : false;
 
     return (
         <div className="container pt-8 pb-8">
@@ -62,13 +61,6 @@ export default function EvoluzioniPage() {
                     <h2 className="text-center text-2xl text-isekai">{albero.titolo}</h2>
                     {albero.sottotitolo && (
                         <p className="text-center mb-4 opacity-80">{albero.sottotitolo}</p>
-                    )}
-
-                    {disallineata && (
-                        <p className="text-center mb-4 opacity-80">
-                            ⚠️ La scheda esportata non corrisponde al personaggio attivo nell'app:
-                            cambia personaggio nell'app DMI e ricarica.
-                        </p>
                     )}
 
                     {albero.nodi.length > 0 ? (

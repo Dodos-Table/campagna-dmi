@@ -1,4 +1,3 @@
-import { Tooltip } from "react-tooltip"
 import FormTokenDmi from "~/components/FormTokenDmi"
 import { nomePersonaggio } from "~/lib/logDmi"
 import type { DmiBridge } from "~/lib/useDmiBridge"
@@ -6,16 +5,8 @@ import type { DmiExport } from "~/types/dmi"
 import "~/assets/css/IntegrazioneApp.css"
 
 function nomeGiocatore(dati: DmiExport): string | null {
-    const identity = dati.character.identity
-    if (typeof identity.playerName === "string" && identity.playerName) return identity.playerName
-
-    const attivo = dati.profiles.find((p) => p.id === dati.activeId)
-    return attivo?.playerName ?? null
-}
-
-function oraSync(syncedAt: string): string {
-    const data = new Date(syncedAt)
-    return Number.isNaN(data.getTime()) ? syncedAt : data.toLocaleString("it-IT")
+    const giocatore = dati.character.identity.playerName
+    return typeof giocatore === "string" && giocatore ? giocatore : null
 }
 
 interface IntegrazioneAppProp {
@@ -66,14 +57,13 @@ export default function IntegrazioneApp(prop: Readonly<IntegrazioneAppProp>) {
     return (
         <div className="statusIntegrazione">
             <div className="flex gap-3 items-center">
-                <div className="ml-1" data-tooltip-id="latsync" data-tooltip-content={oraSync(dati.syncedAt)}>
+                <div className="ml-1">
                     <strong>{nomePersonaggio(dati)}</strong>{giocatore && ` - ${giocatore}`}
                 </div>
                 <div className="flex">
                     <div onClick={ricarica} className="cursor-pointer">🔄</div>
                     <div onClick={() => setToken("")} className="cursor-pointer">❌</div>
                 </div>
-                <Tooltip id="latsync" />
             </div>
         </div>
     )
