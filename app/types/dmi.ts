@@ -86,6 +86,16 @@ export interface DmiSkill {
     [chiave: string]: unknown;
 }
 
+/**
+ * Valori difensivi del bersaglio scelto, contro cui l'app risolve gli attacchi.
+ * È anche il body di `POST /api/sheets/{id}`, sotto la chiave `target`.
+ */
+export interface DmiTarget {
+    elusion: number;
+    def: number;
+    men: number;
+}
+
 /** Una voce di `character.log`, il registro degli eventi di gioco. */
 export interface DmiLogEntry {
     id: string;
@@ -108,7 +118,7 @@ export interface DmiCharacter {
     skills: DmiSkill[];
     statuses: unknown[];
     actions: Record<string, unknown>;
-    target: Record<string, unknown>;
+    target: DmiTarget;
     abilities: Record<string, unknown>;
     equipment: Record<string, unknown>;
     journal: Record<string, unknown>;
