@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { pubblicaEvento } from "~/lib/attivitaHosting";
+import { URL_HOSTING, pubblicaEvento } from "~/lib/attivitaHosting";
 import { nomePersonaggio, vociLog } from "~/lib/logDmi";
 import type { DmiBridge } from "~/lib/useDmiBridge";
 
@@ -104,7 +104,7 @@ export default function usePubblicaLog(bridge: DmiBridge): PubblicazioneLog {
                 for (const voce of daInviare) {
                     if (signal?.aborted) return;
 
-                    const idEvento = await pubblicaEvento({
+                    const idEvento = await pubblicaEvento(URL_HOSTING, {
                         timestamp: voce.timestamp ?? new Date().toISOString(),
                         messaggio: voce.testo,
                         personaggio,

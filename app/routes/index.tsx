@@ -43,6 +43,9 @@ export default function Home() {
           <div>
             <DmiBtn link="attivita">Attività</DmiBtn>
           </div>
+          <div>
+            <DmiBtn link="campo">Campo</DmiBtn>
+          </div>
         </div>
       </div>
       <IntegrazioneApp dmibridge={dmiBridge} />
