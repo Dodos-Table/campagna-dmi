@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { scaricaEventi } from "~/lib/attivitaHosting";
-import type { EventoAttivita, StatoFeed } from "~/types/attivita";
+import type { StatoFeed } from "~/types/attivita";
 
 /** Attesa dopo una caduta, raddoppiata a ogni tentativo fallito. */
 const BACKOFF_INIZIALE_MS = 3_000;
@@ -16,8 +16,8 @@ function attendi(ms: number, signal: AbortSignal): Promise<void> {
     });
 }
 
-export interface FeedAttivita {
-    eventi: EventoAttivita[];
+export interface FeedAttivita<T> {
+    eventi: T[];
     stato: StatoFeed;
     errore: string | null;
 }
@@ -30,9 +30,17 @@ export interface FeedAttivita {
  * `attivo` a `false` non apre nulla: la pagina mostra il feed solo a scheda
  * collegata, e tenere una connessione perennemente aperta su contenuto che
  * nessuno sta guardando è solo traffico sprecato.
+ *
+ * `base` è la bacheca da ascoltare; `normalizza` sceglie quali eventi tenere
+ * e in che forma (`null` = scartato). Entrambi devono essere stabili: ogni
+ * cambio riavvia il ciclo.
  */
-export default function useFeedAttivita(attivo: boolean): FeedAttivita {
-    const [eventi, setEventi] = useState<EventoAttivita[]>([]);
+export default function useFeedAttivita<T extends { id: number }>(
+    base: string,
+    attivo: boolean,
+    normalizza: (grezzo: unknown) => T | null,
+): FeedAttivita<T> {
+    const [eventi, setEventi] = useState<T[]>([]);
     const [stato, setStato] = useState<StatoFeed>("avvio");
     const [errore, setErrore] = useState<string | null>(null);
     // Sopravvive ai riavvii del ciclo: alla ripresa si riparte da qui invece di
@@ -60,7 +68,7 @@ export default function useFeedAttivita(attivo: boolean): FeedAttivita {
         const { signal } = controller;
 
         /** Unisce i nuovi eventi scartando gli id già in lista (una ripresa può ripeterli). */
-        const aggiungi = (nuovi: EventoAttivita[]) => {
+        const aggiungi = (nuovi: T[]) => {
             if (nuovi.length === 0) return;
 
             setEventi((precedenti) => {
@@ -73,7 +81,7 @@ export default function useFeedAttivita(attivo: boolean): FeedAttivita {
         /** Primo avvio: cursore e storico. Le richieste sono immediate, non long-poll. */
         const avvia = async () => {
             // Senza `since` la risposta è immediata e porta solo il cursore.
-            const iniziale = await scaricaEventi(null, signal);
+            const iniziale = await scaricaEventi(base, null, normalizza, signal);
             if (signal.aborted) return;
 
             // Con archivio vuoto un `?since=0` resterebbe appeso 25s ritardando il
@@ -83,7 +91,7 @@ export default function useFeedAttivita(attivo: boolean): FeedAttivita {
                 return;
             }
 
-            const storico = await scaricaEventi(0, signal);
+            const storico = await scaricaEventi(base, 0, normalizza, signal);
             if (signal.aborted) return;
 
             aggiungi(storico.eventi);
@@ -92,7 +100,7 @@ export default function useFeedAttivita(attivo: boolean): FeedAttivita {
 
         /** Un giro di long-poll: resta appeso fino al prossimo evento o a ~25s. */
         const attendiNovita = async (da: number) => {
-            const risposta = await scaricaEventi(da, signal);
+            const risposta = await scaricaEventi(base, da, normalizza, signal);
             if (signal.aborted) return;
 
             aggiungi(risposta.eventi);
@@ -132,7 +140,7 @@ export default function useFeedAttivita(attivo: boolean): FeedAttivita {
         void ciclo();
 
         return () => controller.abort();
-    }, [attivo, ripresa]);
+    }, [base, attivo, ripresa, normalizza]);
 
     return { eventi, stato, errore };
 }

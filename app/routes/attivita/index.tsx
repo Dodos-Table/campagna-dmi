@@ -1,5 +1,6 @@
 import FeedAttivita from "~/components/attivita/FeedAttivita";
 import FormTokenDmi from "~/components/FormTokenDmi";
+import { URL_HOSTING, normalizzaEvento } from "~/lib/attivitaHosting";
 import IntegrazioneApp from "~/components/IntegrazioneApp";
 import useDmiBridge from "~/lib/useDmiBridge";
 import useFeedAttivita from "~/lib/useFeedAttivita";
@@ -22,7 +23,7 @@ export default function Attivita() {
 
     // Il feed compare solo a scheda collegata: senza bridge il long-poll resterebbe
     // aperto di continuo su contenuto che il gate qui sotto non mostra comunque.
-    const feed = useFeedAttivita(dmiBridge.stato === "connesso");
+    const feed = useFeedAttivita(URL_HOSTING, dmiBridge.stato === "connesso", normalizzaEvento);
     const { idPropri, erroreInvio } = usePubblicaLog(dmiBridge);
 
     if(!dmiBridge.token || (dmiBridge.stato === "caricamento" || dmiBridge.stato === "errore")) {

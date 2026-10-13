@@ -21,6 +21,9 @@ export default [
             ]),
             ...prefix("attivita", [
                 index("routes/attivita/index.tsx")
+            ]),
+            ...prefix("campo", [
+                index("routes/campo/index.tsx")
             ])
         ]),
 
