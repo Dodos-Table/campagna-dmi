@@ -3,9 +3,9 @@ import { numero, valoriDifesa } from "~/lib/statsDmi";
 import type { EventoCampo, SchedaCampo } from "~/types/campo";
 import type { DmiCharacter } from "~/types/dmi";
 
-/** Le schede del GM sono schede normali: le distingue solo la scritta nel nome. */
+/** Le schede del GM sono schede normali: le distingue solo il nome del giocatore "GM". */
 export function isGm(nome: string): boolean {
-    return nome.includes("GM");
+    return nome.toLocaleLowerCase() == "gm";
 }
 
 /**
@@ -15,12 +15,13 @@ export function isGm(nome: string): boolean {
  */
 function eventoCampo(campi: Record<string, unknown>): EventoCampo | null {
     if (campi.tipo !== "campo" || typeof campi.schedaId !== "string" || !campi.schedaId) return null;
-
+    
     return {
         tipo: "campo",
         schedaId: campi.schedaId,
         inField: campi.inField === true,
         nome: typeof campi.nome === "string" && campi.nome ? campi.nome : "Scheda senza nome",
+        playerName: typeof campi.playerName === "string" ? campi.playerName : "",
         // Solo immagini inline: un URL qualsiasi farebbe caricare risorse esterne a tutti.
         portrait: typeof campi.portrait === "string" && campi.portrait.startsWith("data:image/") ? campi.portrait : "",
         elusion: numero(campi.elusion),
@@ -45,6 +46,7 @@ export function eventoDaScheda(scheda: DmiCharacter): EventoCampo | null {
         schedaId: scheda.id,
         inField: scheda.inField,
         nome: scheda.identity?.monsterName,
+        playerName: scheda.identity?.playerName,
         portrait: scheda.portrait,
         ...valoriDifesa(scheda),
     });
@@ -52,7 +54,7 @@ export function eventoDaScheda(scheda: DmiCharacter): EventoCampo | null {
 
 /** Quello che gli altri vedono di una scheda: se non cambia, non serve ripubblicarla. */
 export function firma(evento: EventoCampo): string {
-    return JSON.stringify([evento.inField, evento.nome, evento.portrait, evento.elusion, evento.def, evento.men]);
+    return JSON.stringify([evento.inField, evento.nome, evento.playerName, evento.portrait, evento.elusion, evento.def, evento.men]);
 }
 
 /** Di ogni scheda vale solo l'ultimo messaggio arrivato. */

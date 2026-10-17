@@ -7,7 +7,7 @@ Riepilogo del lavoro per la pagina `/campo` (campo di battaglia) e delle modific
 Una pagina che giocatori e GM tengono aperta durante lo scontro:
 
 - mostra le schede con `inField: true` di tutti quelli collegati, ognuna con immagine e nome;
-- **zona GM in alto** (schede con la scritta `GM` nel nome), **zona giocatori in basso**;
+- **zona GM in alto** (schede con `playerName` uguale a `GM`, senza distinzione di maiuscole), **zona giocatori in basso**;
 - ognuno interagisce solo con le proprie schede: ne sceglie una e clicca un **avversario della zona opposta** (il giocatore clicca il GM e viceversa);
 - il click scrive i valori difensivi dell'avversario nella propria scheda dell'app DMI;
 - come per Evoluzioni e Attività, la pagina si usa solo con il DmiBridge collegato (token).
@@ -28,7 +28,7 @@ App DMI (PC giocatore)                 dodos-table.it/dmi-campo/              Ap
 
 1. **Lettura delle proprie schede**: `useDmiBridge({ pollMs: 2500 })` rilegge `/export`. Tutte le schede in `dati.profiles` sono "proprie" di questo computer.
 2. **Invio**: per ogni scheda propria il sito prepara un messaggio
-   `{ tipo: "campo", schedaId, inField, nome, portrait, elusion, def, men }`
+   `{ tipo: "campo", schedaId, inField, nome, playerName, portrait, elusion, def, men }`
    e lo pubblica su `dmi-campo/publish.php` **solo se la bacheca mostra uno stato diverso** da quello attuale:
    - entrata in campo, uscita (`inField: false`), oppure cambio di nome, immagine o valori;
    - una scheda mai entrata in campo non viene annunciata;
