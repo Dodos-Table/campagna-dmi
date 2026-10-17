@@ -11,6 +11,8 @@ export interface EventoCampo extends DmiTarget {
     schedaId: string;
     inField: boolean;
     nome: string;
+    /** `identity.playerName` della scheda: "GM" (senza distinzione di maiuscole) indica il GM. */
+    playerName: string;
     /** Data URI dell'immagine, stringa vuota se la scheda non ne ha. */
     portrait: string;
 }
