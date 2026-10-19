@@ -69,7 +69,7 @@ export default function Campo() {
     const ruolo = (scheda: SchedaCampo): RuoloScheda => {
         if (proprie.has(scheda.schedaId)) return scheda.schedaId === attaccante?.schedaId ? "selezionata" : "propria";
         // Avversari sono le schede dell'altra zona: il GM attacca i giocatori e viceversa.
-        if (attaccante && isGm(scheda.nome) !== isGm(attaccante.nome)) return "avversaria";
+        if (attaccante && isGm(scheda.playerName) !== isGm(attaccante.playerName)) return "avversaria";
         return "altra";
     };
 
@@ -101,13 +101,13 @@ export default function Campo() {
         )}
 
         <div className="campo">
-            <ZonaCampo titolo="GM" schede={schede.filter((s) => isGm(s.nome))} ruolo={ruolo} onScegli={scegli} />
+            <ZonaCampo titolo="GM" schede={schede.filter((s) => isGm(s.playerName))} ruolo={ruolo} onScegli={scegli} />
             <p className="campo-esito" role="status">
                 {esito ?? (attaccante
                     ? `Attacchi con ${attaccante.nome}: scegli un avversario.`
                     : "Nessuna tua scheda in campo: mettine una in campo nell'app DMI.")}
             </p>
-            <ZonaCampo titolo="Giocatori" schede={schede.filter((s) => !isGm(s.nome))} ruolo={ruolo} onScegli={scegli} />
+            <ZonaCampo titolo="Giocatori" schede={schede.filter((s) => !isGm(s.playerName))} ruolo={ruolo} onScegli={scegli} />
         </div>
 
         <IntegrazioneApp dmibridge={dmiBridge} />

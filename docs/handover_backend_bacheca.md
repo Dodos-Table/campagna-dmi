@@ -117,6 +117,7 @@ Access-Control-Max-Age: 86400
   "schedaId": "7ba3a176-898f-4d3c-8d72-470a5b50abf0",
   "inField": true,
   "nome": "main Taratect",
+  "playerName": "Mario",
   "portrait": "data:image/jpeg;base64,/9j/4AAQ…",
   "elusion": 31,
   "def": 7,
@@ -124,7 +125,7 @@ Access-Control-Max-Age: 86400
 }
 ```
 - Il client tiene **solo l'ultimo** evento (id più alto) per ogni `schedaId`. Con `inField: false` la scheda sparisce dal campo.
-- Le schede del GM si riconoscono solo dalla scritta `GM` nel nome. Il server non deve farci niente.
+- Le schede del GM si riconoscono solo da `playerName` uguale a `GM` (senza distinzione di maiuscole). Il server non deve farci niente, ma deve conservare il campo.
 
 ---
 
@@ -142,7 +143,7 @@ Access-Control-Max-Age: 86400
    - su `dmi-hosting/` niente compattazione: lì ogni evento è una voce di log da conservare.
 7. **Validazione minima** (la bacheca è pubblica, chiunque può fare POST):
    - body JSON valido, altrimenti `400`;
-   - su `dmi-campo/` accetta solo `tipo === "campo"`, con `schedaId` stringa non vuota (max ~100 caratteri), `inField` booleano, `nome` stringa (max ~100 caratteri), `elusion`/`def`/`men` numerici, `portrait` vuoto oppure che inizi con `data:image/`;
+   - su `dmi-campo/` accetta solo `tipo === "campo"`, con `schedaId` stringa non vuota (max ~100 caratteri), `inField` booleano, `nome` e `playerName` stringhe (max ~100 caratteri), `elusion`/`def`/`men` numerici, `portrait` vuoto oppure che inizi con `data:image/`;
    - nessun HTML generato lato server: i dati tornano solo come JSON (`Content-Type: application/json; charset=utf-8`).
 8. **Encoding**: `json_encode($x, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)`. I nomi contengono accenti e caratteri come `—`.
 
@@ -179,7 +180,7 @@ curl -s -X POST "$B/publish.php" -H "Content-Type: application/json" \
 # → {"ok":true,"id":N+1}
 
 # evento campo grande (~800 KB)
-php -r 'echo json_encode(["tipo"=>"campo","schedaId"=>"test","inField"=>true,"nome"=>"Test GM","portrait"=>"data:image/jpeg;base64,".str_repeat("A",800000),"elusion"=>30,"def"=>1,"men"=>1]);' > big.json
+php -r 'echo json_encode(["tipo"=>"campo","schedaId"=>"test","inField"=>true,"nome"=>"Test","playerName"=>"GM","portrait"=>"data:image/jpeg;base64,".str_repeat("A",800000),"elusion"=>30,"def"=>1,"men"=>1]);' > big.json
 curl -s -X POST "$C/publish.php" -H "Content-Type: application/json" --data-binary @big.json   # → ok:true
 
 # isolamento: l'evento campo non deve comparire su dmi-hosting
