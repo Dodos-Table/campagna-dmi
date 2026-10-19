@@ -7,6 +7,15 @@
     margin: 0 auto;
 }
 
+/* Feed attività sotto il campo su schermi stretti, a destra da lg in su. */
+.campoConFeed {
+    @apply grid gap-6 items-start lg:grid-cols-[minmax(0,1fr)_28rem];
+}
+
+.campo-feed {
+    @apply lg:sticky lg:top-4 lg:max-h-[calc(100vh-20rem)] lg:overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent;
+}
+
 .campo-esito {
     text-align: center;
     color: color-mix(in oklch, var(--color-text) 80%, transparent);
