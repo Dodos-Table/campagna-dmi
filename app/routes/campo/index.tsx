@@ -1,13 +1,18 @@
 import { useState } from "react";
+import FeedAttivita from "~/components/attivita/FeedAttivita";
 import ZonaCampo, { type RuoloScheda } from "~/components/campo/ZonaCampo";
 import FormTokenDmi from "~/components/FormTokenDmi";
 import IntegrazioneApp from "~/components/IntegrazioneApp";
+import { URL_HOSTING, normalizzaEvento } from "~/lib/attivitaHosting";
 import { isGm } from "~/lib/campo";
 import { impostaTarget } from "~/lib/dmiBridge";
 import useCampo from "~/lib/useCampo";
 import useDmiBridge from "~/lib/useDmiBridge";
+import useFeedAttivita from "~/lib/useFeedAttivita";
+import usePubblicaLog from "~/lib/usePubblicaLog";
 import type { SchedaCampo } from "~/types/campo";
 import type { Route } from "./+types/index";
+import "~/assets/css/attivita.css";
 import "~/assets/css/campo.css";
 
 /** Ogni quanto rileggere la scheda per accorgersi di entrate/uscite dal campo e cambi di valori. */
@@ -23,6 +28,9 @@ export function meta({ }: Route.MetaArgs) {
 export default function Campo() {
     const dmiBridge = useDmiBridge({ pollMs: POLL_BRIDGE_MS });
     const { schede, erroreInvio } = useCampo(dmiBridge);
+    const feed = useFeedAttivita(URL_HOSTING, dmiBridge.stato === "connesso", normalizzaEvento);
+    // Anche da qui: chi gioca dal Campo deve comparire nel feed degli altri.
+    const { idPropri, erroreInvio: erroreLog } = usePubblicaLog(dmiBridge);
 
     const [selezionata, setSelezionata] = useState<string | null>(null);
     const [esito, setEsito] = useState<string | null>(null);
@@ -99,15 +107,25 @@ export default function Campo() {
         {erroreInvio && (
             <p className="text-center max-w-prose mx-auto mb-4">⚠️ {erroreInvio}</p>
         )}
+        {erroreLog && (
+            <p className="text-center max-w-prose mx-auto mb-4">⚠️ {erroreLog}</p>
+        )}
 
-        <div className="campo">
-            <ZonaCampo titolo="GM" schede={schede.filter((s) => isGm(s.playerName))} ruolo={ruolo} onScegli={scegli} />
-            <p className="campo-esito" role="status">
-                {esito ?? (attaccante
-                    ? `Attacchi con ${attaccante.nome}: scegli un avversario.`
-                    : "Nessuna tua scheda in campo: mettine una in campo nell'app DMI.")}
-            </p>
-            <ZonaCampo titolo="Giocatori" schede={schede.filter((s) => !isGm(s.playerName))} ruolo={ruolo} onScegli={scegli} />
+        <div className="campoConFeed">
+            <div className="campo">
+                <ZonaCampo titolo="GM" schede={schede.filter((s) => isGm(s.playerName))} ruolo={ruolo} onScegli={scegli} />
+                <p className="campo-esito" role="status">
+                    {esito ?? (attaccante
+                        ? `Attacchi con ${attaccante.nome}: scegli un avversario.`
+                        : "Nessuna tua scheda in campo: mettine una in campo nell'app DMI.")}
+                </p>
+                <ZonaCampo titolo="Giocatori" schede={schede.filter((s) => !isGm(s.playerName))} ruolo={ruolo} onScegli={scegli} />
+            </div>
+
+            <aside className="campo-feed">
+                <h2 className="zonaCampo-titolo">Attività</h2>
+                <FeedAttivita eventi={feed.eventi} stato={feed.stato} idPropri={idPropri} />
+            </aside>
         </div>
 
         <IntegrazioneApp dmibridge={dmiBridge} />
