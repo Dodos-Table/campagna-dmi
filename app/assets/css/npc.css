@@ -121,7 +121,7 @@
 }
 
 .npc-scheda__descrizione {
-    max-width: 65ch;
+    /*max-width: 65ch;*/
     line-height: 1.6;
     white-space: pre-line;
 }

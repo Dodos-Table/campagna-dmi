@@ -5,5 +5,12 @@
         "data": "???",
         "color": "#636363",
         "icon": "skull"
+    },
+    {
+        "title": "L'esplorazione del dungeon",
+        "body": "Funghi ovunque, caverne interminabili\n\nAvviamo visto un Miconide che faceva da guardia a quello che sembra una voragine.",
+        "data": "Giorno 3",
+        "color": "#636363",
+        "icon": ""
     }
 ]
